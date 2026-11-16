@@ -1,13 +1,47 @@
+
 def average_marks(marks_csv):
-    marks = [int(m) for m in marks_csv.split(',')]
-    return round(sum(marks) / len(marks), 2)
+    if not isinstance(marks_csv, str) or not marks_csv.strip():
+        return 0.0
+
+    try:
+        marks = [int(m.strip()) for m in marks_csv.split(',')]
+
+        if not marks:
+            return 0.0
+
+        return round(sum(marks) / len(marks), 2)
+
+    except ValueError:
+        return 0.0
+
 
 def parse_srn(srn):
-    return srn[:4], int(srn[6:8]), srn[8:10]
+    if not isinstance(srn, str) or len(srn) < 10:
+        return "", None, ""
+
+    year = srn[6:8]
+    dept = srn[8:10]
+
+    if not year.isdigit() or not dept.isalpha():
+        return "", None, ""
+
+    return srn[:4], int(year), dept
+
 
 def short_name(full_name):
-    first, last = full_name.split()
+    if not isinstance(full_name, str):
+        return "Invalid name"
+
+    parts = full_name.split()
+
+    if len(parts) < 2:
+        return "Invalid name"
+
+    first = parts[0]
+    last = parts[-1]
+
     return first[0].upper() + ". " + last.capitalize()
+
 
 def main():
     print("==== Running average_marks ====")
@@ -24,6 +58,7 @@ def main():
     user_input = input("Enter first and last name (e.g. ravi kumar): ")
     result = short_name(user_input)
     print("Short Name:", result)
+
 
 if __name__ == "__main__":
     main()
